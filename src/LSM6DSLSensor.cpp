@@ -53,7 +53,7 @@
  */
 LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c) : dev_i2c(i2c)
 {
-  address = LSM6DSL_ACC_GYRO_I2C_ADDRESS_HIGH; 
+  address = LSM6DSL_ACC_GYRO_I2C_ADDRESS_HIGH;
 
   /* Enable register address automatically incremented during a multiple byte
      access with a serial interface. */
@@ -61,25 +61,25 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c) : dev_i2c(i2c)
   {
     return;
   }
-  
+
   /* Enable BDU */
   if ( LSM6DSL_ACC_GYRO_W_BDU( (void *)this, LSM6DSL_ACC_GYRO_BDU_BLOCK_UPDATE ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* FIFO mode selection */
   if ( LSM6DSL_ACC_GYRO_W_FIFO_MODE( (void *)this, LSM6DSL_ACC_GYRO_FIFO_MODE_BYPASS ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* Output data rate selection - power down. */
   if ( LSM6DSL_ACC_GYRO_W_ODR_XL( (void *)this, LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* Full scale selection. */
   if ( Set_X_FS( 2.0f ) == LSM6DSL_STATUS_ERROR )
   {
@@ -97,11 +97,11 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c) : dev_i2c(i2c)
   {
     return;
   }
-  
+
   X_Last_ODR = 104.0f;
 
   X_isEnabled = 0;
-  
+
   G_Last_ODR = 104.0f;
 
   G_isEnabled = 0;
@@ -111,33 +111,33 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c) : dev_i2c(i2c)
  * @param i2c object of an helper class which handles the I2C peripheral
  * @param address the address of the component's instance
  */
-LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c), address(address)
-{ 
+LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : address(address), dev_i2c(i2c)
+{
   /* Enable register address automatically incremented during a multiple byte
      access with a serial interface. */
   if ( LSM6DSL_ACC_GYRO_W_IF_Addr_Incr( (void *)this, LSM6DSL_ACC_GYRO_IF_INC_ENABLED ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* Enable BDU */
   if ( LSM6DSL_ACC_GYRO_W_BDU( (void *)this, LSM6DSL_ACC_GYRO_BDU_BLOCK_UPDATE ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* FIFO mode selection */
   if ( LSM6DSL_ACC_GYRO_W_FIFO_MODE( (void *)this, LSM6DSL_ACC_GYRO_FIFO_MODE_BYPASS ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* Output data rate selection - power down. */
   if ( LSM6DSL_ACC_GYRO_W_ODR_XL( (void *)this, LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN ) == MEMS_ERROR )
   {
     return;
   }
-  
+
   /* Full scale selection. */
   if ( Set_X_FS( 2.0f ) == LSM6DSL_STATUS_ERROR )
   {
@@ -155,11 +155,11 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c), addr
   {
     return;
   }
-  
+
   X_Last_ODR = 104.0f;
 
   X_isEnabled = 0;
-  
+
   G_Last_ODR = 104.0f;
 
   G_isEnabled = 0;
@@ -170,21 +170,21 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c), addr
  * @retval LSM6DSL_STATUS_OK in case of success, an error code otherwise
  */
 LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_X(void)
-{ 
+{
   /* Check if the component is already enabled */
   if ( X_isEnabled == 1 )
   {
     return LSM6DSL_STATUS_OK;
   }
-  
+
   /* Output data rate selection. */
   if ( Set_X_ODR_When_Enabled( X_Last_ODR ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   X_isEnabled = 1;
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -193,21 +193,21 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_X(void)
  * @retval LSM6DSL_STATUS_OK in case of success, an error code otherwise
  */
 LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_G(void)
-{ 
+{
   /* Check if the component is already enabled */
   if ( G_isEnabled == 1 )
   {
     return LSM6DSL_STATUS_OK;
   }
-  
+
   /* Output data rate selection. */
   if ( Set_G_ODR_When_Enabled( G_Last_ODR ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   G_isEnabled = 1;
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -216,27 +216,27 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_G(void)
  * @retval LSM6DSL_STATUS_OK in case of success, an error code otherwise
  */
 LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_X(void)
-{ 
+{
   /* Check if the component is already disabled */
   if ( X_isEnabled == 0 )
   {
     return LSM6DSL_STATUS_OK;
   }
-  
+
   /* Store actual output data rate. */
   if ( Get_X_ODR( &X_Last_ODR ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Output data rate selection - power down. */
   if ( LSM6DSL_ACC_GYRO_W_ODR_XL( (void *)this, LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   X_isEnabled = 0;
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -245,27 +245,27 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_X(void)
  * @retval LSM6DSL_STATUS_OK in case of success, an error code otherwise
  */
 LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_G(void)
-{ 
+{
   /* Check if the component is already disabled */
   if ( G_isEnabled == 0 )
   {
     return LSM6DSL_STATUS_OK;
   }
-  
+
   /* Store actual output data rate. */
   if ( Get_G_ODR( &G_Last_ODR ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Output data rate selection - power down */
   if ( LSM6DSL_ACC_GYRO_W_ODR_G( (void *)this, LSM6DSL_ACC_GYRO_ODR_G_POWER_DOWN ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   G_isEnabled = 0;
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -277,7 +277,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_G(void)
 LSM6DSLStatusTypeDef LSM6DSLSensor::ReadID(uint8_t *p_id)
 {
   if(!p_id)
-  { 
+  {
     return LSM6DSL_STATUS_ERROR;
   }
 
@@ -286,7 +286,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::ReadID(uint8_t *p_id)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -299,24 +299,24 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_Axes(int32_t *pData)
 {
   int16_t dataRaw[3];
   float sensitivity = 0;
-  
+
   /* Read raw data from LSM6DSL output register. */
   if ( Get_X_AxesRaw( dataRaw ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Get LSM6DSL actual sensitivity. */
   if ( Get_X_Sensitivity( &sensitivity ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Calculate the data. */
   pData[0] = ( int32_t )( dataRaw[0] * sensitivity );
   pData[1] = ( int32_t )( dataRaw[1] * sensitivity );
   pData[2] = ( int32_t )( dataRaw[2] * sensitivity );
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -329,24 +329,24 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_Axes(int32_t *pData)
 {
   int16_t dataRaw[3];
   float sensitivity = 0;
-  
+
   /* Read raw data from LSM6DSL output register. */
   if ( Get_G_AxesRaw( dataRaw ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Get LSM6DSL actual sensitivity. */
   if ( Get_G_Sensitivity( &sensitivity ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Calculate the data. */
   pData[0] = ( int32_t )( dataRaw[0] * sensitivity );
   pData[1] = ( int32_t )( dataRaw[1] * sensitivity );
   pData[2] = ( int32_t )( dataRaw[2] * sensitivity );
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -358,13 +358,13 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_Axes(int32_t *pData)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_Sensitivity(float *pfData)
 {
   LSM6DSL_ACC_GYRO_FS_XL_t fullScale;
-  
+
   /* Read actual full scale selection from sensor. */
   if ( LSM6DSL_ACC_GYRO_R_FS_XL( (void *)this, &fullScale ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Store the sensitivity based on actual full scale. */
   switch( fullScale )
   {
@@ -384,7 +384,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_Sensitivity(float *pfData)
       *pfData = -1.0f;
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -397,27 +397,27 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_Sensitivity(float *pfData)
 {
   LSM6DSL_ACC_GYRO_FS_125_t fullScale125;
   LSM6DSL_ACC_GYRO_FS_G_t   fullScale;
-  
+
   /* Read full scale 125 selection from sensor. */
   if ( LSM6DSL_ACC_GYRO_R_FS_125( (void *)this, &fullScale125 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   if ( fullScale125 == LSM6DSL_ACC_GYRO_FS_125_ENABLED )
   {
     *pfData = ( float )LSM6DSL_GYRO_SENSITIVITY_FOR_FS_125DPS;
   }
-  
+
   else
   {
-  
+
     /* Read actual full scale selection from sensor. */
     if ( LSM6DSL_ACC_GYRO_R_FS_G( (void *)this, &fullScale ) == MEMS_ERROR )
     {
       return LSM6DSL_STATUS_ERROR;
     }
-    
+
     /* Store the sensitivity based on actual full scale. */
     switch( fullScale )
     {
@@ -438,7 +438,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_Sensitivity(float *pfData)
         return LSM6DSL_STATUS_ERROR;
     }
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -450,18 +450,18 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_Sensitivity(float *pfData)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_AxesRaw(int16_t *pData)
 {
   uint8_t regValue[6] = {0, 0, 0, 0, 0, 0};
-  
+
   /* Read output registers from LSM6DSL_ACC_GYRO_OUTX_L_XL to LSM6DSL_ACC_GYRO_OUTZ_H_XL. */
   if ( LSM6DSL_ACC_GYRO_GetRawAccData( (void *)this, regValue ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Format the data. */
   pData[0] = ( ( ( ( int16_t )regValue[1] ) << 8 ) + ( int16_t )regValue[0] );
   pData[1] = ( ( ( ( int16_t )regValue[3] ) << 8 ) + ( int16_t )regValue[2] );
   pData[2] = ( ( ( ( int16_t )regValue[5] ) << 8 ) + ( int16_t )regValue[4] );
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -473,18 +473,18 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_AxesRaw(int16_t *pData)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_AxesRaw(int16_t *pData)
 {
   uint8_t regValue[6] = {0, 0, 0, 0, 0, 0};
-  
+
   /* Read output registers from LSM6DSL_ACC_GYRO_OUTX_L_G to LSM6DSL_ACC_GYRO_OUTZ_H_G. */
   if ( LSM6DSL_ACC_GYRO_GetRawGyroData( (void *)this, regValue ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Format the data. */
   pData[0] = ( ( ( ( int16_t )regValue[1] ) << 8 ) + ( int16_t )regValue[0] );
   pData[1] = ( ( ( ( int16_t )regValue[3] ) << 8 ) + ( int16_t )regValue[2] );
   pData[2] = ( ( ( ( int16_t )regValue[5] ) << 8 ) + ( int16_t )regValue[4] );
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -496,12 +496,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_AxesRaw(int16_t *pData)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_ODR(float* odr)
 {
   LSM6DSL_ACC_GYRO_ODR_XL_t odr_low_level;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_ODR_XL( (void *)this, &odr_low_level ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( odr_low_level )
   {
     case LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN:
@@ -541,7 +541,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_ODR(float* odr)
       *odr = -1.0f;
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -553,12 +553,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_ODR(float* odr)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_ODR(float* odr)
 {
   LSM6DSL_ACC_GYRO_ODR_G_t odr_low_level;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_ODR_G( (void *)this, &odr_low_level ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( odr_low_level )
   {
     case LSM6DSL_ACC_GYRO_ODR_G_POWER_DOWN:
@@ -598,7 +598,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_ODR(float* odr)
       *odr = -1.0f;
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -623,7 +623,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR(float odr)
       return LSM6DSL_STATUS_ERROR;
     }
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -635,7 +635,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR(float odr)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR_When_Enabled(float odr)
 {
   LSM6DSL_ACC_GYRO_ODR_XL_t new_odr;
-  
+
   new_odr = ( odr <=   13.0f ) ? LSM6DSL_ACC_GYRO_ODR_XL_13Hz
           : ( odr <=   26.0f ) ? LSM6DSL_ACC_GYRO_ODR_XL_26Hz
           : ( odr <=   52.0f ) ? LSM6DSL_ACC_GYRO_ODR_XL_52Hz
@@ -646,12 +646,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR_When_Enabled(float odr)
           : ( odr <= 1660.0f ) ? LSM6DSL_ACC_GYRO_ODR_XL_1660Hz
           : ( odr <= 3330.0f ) ? LSM6DSL_ACC_GYRO_ODR_XL_3330Hz
           :                      LSM6DSL_ACC_GYRO_ODR_XL_6660Hz;
-            
+
   if ( LSM6DSL_ACC_GYRO_W_ODR_XL( (void *)this, new_odr ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -661,7 +661,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR_When_Enabled(float odr)
  * @retval LSM6DSL_STATUS_OK in case of success, an error code otherwise
  */
 LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR_When_Disabled(float odr)
-{ 
+{
   X_Last_ODR = ( odr <=   13.0f ) ? 13.0f
              : ( odr <=   26.0f ) ? 26.0f
              : ( odr <=   52.0f ) ? 52.0f
@@ -672,7 +672,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_ODR_When_Disabled(float odr)
              : ( odr <= 1660.0f ) ? 1660.0f
              : ( odr <= 3330.0f ) ? 3330.0f
              :                      6660.0f;
-                                 
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -697,7 +697,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_ODR(float odr)
       return LSM6DSL_STATUS_ERROR;
     }
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -709,7 +709,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_ODR(float odr)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_ODR_When_Enabled(float odr)
 {
   LSM6DSL_ACC_GYRO_ODR_G_t new_odr;
-  
+
   new_odr = ( odr <=  13.0f )  ? LSM6DSL_ACC_GYRO_ODR_G_13Hz
           : ( odr <=  26.0f )  ? LSM6DSL_ACC_GYRO_ODR_G_26Hz
           : ( odr <=  52.0f )  ? LSM6DSL_ACC_GYRO_ODR_G_52Hz
@@ -720,12 +720,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_ODR_When_Enabled(float odr)
           : ( odr <= 1660.0f ) ? LSM6DSL_ACC_GYRO_ODR_G_1660Hz
           : ( odr <= 3330.0f ) ? LSM6DSL_ACC_GYRO_ODR_G_3330Hz
           :                      LSM6DSL_ACC_GYRO_ODR_G_6660Hz;
-            
+
   if ( LSM6DSL_ACC_GYRO_W_ODR_G( (void *)this, new_odr ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -746,7 +746,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_ODR_When_Disabled(float odr)
              : ( odr <= 1660.0f ) ? 1660.0f
              : ( odr <= 3330.0f ) ? 3330.0f
              :                      6660.0f;
-                                 
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -758,12 +758,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_ODR_When_Disabled(float odr)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_FS(float* fullScale)
 {
   LSM6DSL_ACC_GYRO_FS_XL_t fs_low_level;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_FS_XL( (void *)this, &fs_low_level ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( fs_low_level )
   {
     case LSM6DSL_ACC_GYRO_FS_XL_2g:
@@ -782,7 +782,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_X_FS(float* fullScale)
       *fullScale = -1.0f;
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -795,7 +795,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_FS(float* fullScale)
 {
   LSM6DSL_ACC_GYRO_FS_G_t fs_low_level;
   LSM6DSL_ACC_GYRO_FS_125_t fs_125;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_FS_125( (void *)this, &fs_125 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
@@ -804,12 +804,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_FS(float* fullScale)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   if ( fs_125 == LSM6DSL_ACC_GYRO_FS_125_ENABLED )
   {
     *fullScale = 125.0f;
   }
-  
+
   else
   {
     switch( fs_low_level )
@@ -831,7 +831,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_FS(float* fullScale)
         return LSM6DSL_STATUS_ERROR;
     }
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -843,17 +843,17 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_G_FS(float* fullScale)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_FS(float fullScale)
 {
   LSM6DSL_ACC_GYRO_FS_XL_t new_fs;
-  
+
   new_fs = ( fullScale <= 2.0f ) ? LSM6DSL_ACC_GYRO_FS_XL_2g
          : ( fullScale <= 4.0f ) ? LSM6DSL_ACC_GYRO_FS_XL_4g
          : ( fullScale <= 8.0f ) ? LSM6DSL_ACC_GYRO_FS_XL_8g
          :                         LSM6DSL_ACC_GYRO_FS_XL_16g;
-           
+
   if ( LSM6DSL_ACC_GYRO_W_FS_XL( (void *)this, new_fs ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -865,7 +865,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_X_FS(float fullScale)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_FS(float fullScale)
 {
   LSM6DSL_ACC_GYRO_FS_G_t new_fs;
-  
+
   if ( fullScale <= 125.0f )
   {
     if ( LSM6DSL_ACC_GYRO_W_FS_125( (void *)this, LSM6DSL_ACC_GYRO_FS_125_ENABLED ) == MEMS_ERROR )
@@ -879,7 +879,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_FS(float fullScale)
            : ( fullScale <=  500.0f ) ? LSM6DSL_ACC_GYRO_FS_G_500dps
            : ( fullScale <= 1000.0f ) ? LSM6DSL_ACC_GYRO_FS_G_1000dps
            :                            LSM6DSL_ACC_GYRO_FS_G_2000dps;
-             
+
     if ( LSM6DSL_ACC_GYRO_W_FS_125( (void *)this, LSM6DSL_ACC_GYRO_FS_125_DISABLED ) == MEMS_ERROR )
     {
       return LSM6DSL_STATUS_ERROR;
@@ -889,7 +889,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_G_FS(float fullScale)
       return LSM6DSL_STATUS_ERROR;
     }
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -916,43 +916,43 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Free_Fall_Detection(LSM6DSL_Interrupt
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection */
   if ( LSM6DSL_ACC_GYRO_W_FS_XL( (void *)this, LSM6DSL_ACC_GYRO_FS_XL_2g ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* FF_DUR setting */
   if ( LSM6DSL_ACC_GYRO_W_FF_Duration( (void *)this, 0x06 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* WAKE_DUR setting */
   if ( LSM6DSL_ACC_GYRO_W_WAKE_DUR( (void *)this, 0x00 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* TIMER_HR setting */
   if ( LSM6DSL_ACC_GYRO_W_TIMER_HR( (void *)this, LSM6DSL_ACC_GYRO_TIMER_HR_6_4ms ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* SLEEP_DUR setting */
   if ( LSM6DSL_ACC_GYRO_W_SLEEP_DUR( (void *)this, 0x00 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* FF_THS setting */
   if ( LSM6DSL_ACC_GYRO_W_FF_THS( (void *)this, LSM6DSL_ACC_GYRO_FF_THS_312mg ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_ENABLED ) == MEMS_ERROR )
   {
@@ -1007,19 +1007,19 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_Free_Fall_Detection(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* FF_DUR setting */
   if ( LSM6DSL_ACC_GYRO_W_FF_Duration( (void *)this, 0x00 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* FF_THS setting */
   if ( LSM6DSL_ACC_GYRO_W_FF_THS( (void *)this, LSM6DSL_ACC_GYRO_FF_THS_156mg ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1035,7 +1035,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Free_Fall_Threshold(uint8_t thr)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1051,37 +1051,37 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Pedometer(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection. */
   if( Set_X_FS(2.0f) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set pedometer threshold. */
   if ( Set_Pedometer_Threshold(LSM6DSL_PEDOMETER_THRESHOLD_MID_HIGH) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable embedded functionalities. */
   if ( LSM6DSL_ACC_GYRO_W_FUNC_EN( (void *)this, LSM6DSL_ACC_GYRO_FUNC_EN_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable pedometer algorithm. */
   if ( LSM6DSL_ACC_GYRO_W_PEDO( (void *)this, LSM6DSL_ACC_GYRO_PEDO_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable pedometer on INT1. */
   if ( LSM6DSL_ACC_GYRO_W_STEP_DET_on_INT1( (void *)this, LSM6DSL_ACC_GYRO_INT1_PEDO_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1096,25 +1096,25 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_Pedometer(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable pedometer algorithm. */
   if ( LSM6DSL_ACC_GYRO_W_PEDO( (void *)this, LSM6DSL_ACC_GYRO_PEDO_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable embedded functionalities. */
   if ( LSM6DSL_ACC_GYRO_W_FUNC_EN( (void *)this, LSM6DSL_ACC_GYRO_FUNC_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset pedometer threshold. */
   if ( Set_Pedometer_Threshold(0x0) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1129,7 +1129,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Step_Counter(uint16_t *step_count)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1143,14 +1143,14 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Reset_Step_Counter(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   delay(10);
-  
+
   if ( LSM6DSL_ACC_GYRO_W_PedoStepReset( (void *)this, LSM6DSL_ACC_GYRO_PEDO_RST_STEP_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1165,7 +1165,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Pedometer_Threshold(uint8_t thr)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1192,19 +1192,19 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Tilt_Detection(LSM6DSL_Interrupt_Pin_
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection. */
   if( Set_X_FS(2.0f) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable embedded functionalities */
   if ( LSM6DSL_ACC_GYRO_W_FUNC_EN( (void *)this, LSM6DSL_ACC_GYRO_FUNC_EN_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable tilt calculation. */
   if ( LSM6DSL_ACC_GYRO_W_TILT( (void *)this, LSM6DSL_ACC_GYRO_TILT_ENABLED ) == MEMS_ERROR )
   {
@@ -1231,7 +1231,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Tilt_Detection(LSM6DSL_Interrupt_Pin_
   default:
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1258,13 +1258,13 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_Tilt_Detection(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable embedded functionalities */
   if ( LSM6DSL_ACC_GYRO_W_FUNC_EN( (void *)this, LSM6DSL_ACC_GYRO_FUNC_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1291,25 +1291,25 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Wake_Up_Detection(LSM6DSL_Interrupt_P
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection. */
   if( Set_X_FS(2.0f) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* WAKE_DUR setting */
   if ( LSM6DSL_ACC_GYRO_W_WAKE_DUR( (void *)this, 0x00 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set wake up threshold. */
   if ( LSM6DSL_ACC_GYRO_W_WK_THS( (void *)this, 0x02 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_ENABLED ) == MEMS_ERROR )
   {
@@ -1336,7 +1336,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Wake_Up_Detection(LSM6DSL_Interrupt_P
   default:
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1357,25 +1357,25 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_Wake_Up_Detection(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* WU_DUR setting */
   if ( LSM6DSL_ACC_GYRO_W_WAKE_DUR( (void *)this, 0x00 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* WU_THS setting */
   if ( LSM6DSL_ACC_GYRO_W_WK_THS( (void *)this, 0x00 ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1390,7 +1390,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Wake_Up_Threshold(uint8_t thr)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1417,7 +1417,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Single_Tap_Detection(LSM6DSL_Interrup
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection. */
   if( Set_X_FS(2.0f) == LSM6DSL_STATUS_ERROR )
   {
@@ -1429,41 +1429,41 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Single_Tap_Detection(LSM6DSL_Interrup
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable Y direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Y_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Y_EN_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable Z direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Z_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Z_EN_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap threshold. */
   if ( Set_Tap_Threshold( LSM6DSL_TAP_THRESHOLD_MID_LOW ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap shock time window. */
   if ( Set_Tap_Shock_Time( LSM6DSL_TAP_SHOCK_TIME_MID_HIGH ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap quiet time window. */
   if ( Set_Tap_Quiet_Time( LSM6DSL_TAP_QUIET_TIME_MID_LOW ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* _NOTE_: Tap duration time window - don't care for single tap. */
-  
+
   /* _NOTE_: Single/Double Tap event - don't care of this flag for single tap. */
-  
+
   /* Enable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_ENABLED ) == MEMS_ERROR )
   {
@@ -1490,7 +1490,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Single_Tap_Detection(LSM6DSL_Interrup
   default:
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1517,47 +1517,47 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_Single_Tap_Detection(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap threshold. */
   if ( Set_Tap_Threshold( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap shock time window. */
   if ( Set_Tap_Shock_Time( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap quiet time window. */
   if ( Set_Tap_Quiet_Time( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* _NOTE_: Tap duration time window - don't care for single tap. */
-  
+
   /* _NOTE_: Single/Double Tap event - don't care of this flag for single tap. */
-  
+
   /* Disable Z direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Z_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Z_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable Y direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Y_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Y_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable X direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_X_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_X_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1584,7 +1584,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Double_Tap_Detection(LSM6DSL_Interrup
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection. */
   if( Set_X_FS(2.0f) == LSM6DSL_STATUS_ERROR )
   {
@@ -1596,49 +1596,49 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_Double_Tap_Detection(LSM6DSL_Interrup
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable Y direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Y_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Y_EN_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable Z direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Z_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Z_EN_ENABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap threshold. */
   if ( Set_Tap_Threshold( LSM6DSL_TAP_THRESHOLD_MID_LOW ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap shock time window. */
   if ( Set_Tap_Shock_Time( LSM6DSL_TAP_SHOCK_TIME_HIGH ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap quiet time window. */
   if ( Set_Tap_Quiet_Time( LSM6DSL_TAP_QUIET_TIME_HIGH ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Set tap duration time window. */
   if ( Set_Tap_Duration_Time( LSM6DSL_TAP_DURATION_TIME_MID ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Single and double tap enabled. */
   if ( LSM6DSL_ACC_GYRO_W_SINGLE_DOUBLE_TAP_EV( (void *)this, LSM6DSL_ACC_GYRO_SINGLE_DOUBLE_TAP_DOUBLE_TAP ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_ENABLED ) == MEMS_ERROR )
   {
@@ -1686,61 +1686,61 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_Double_Tap_Detection(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap threshold. */
   if ( Set_Tap_Threshold( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap shock time window. */
   if ( Set_Tap_Shock_Time( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap quiet time window. */
   if ( Set_Tap_Quiet_Time( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset tap duration time window. */
   if ( Set_Tap_Duration_Time( 0x0 ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Only single tap enabled. */
   if ( LSM6DSL_ACC_GYRO_W_SINGLE_DOUBLE_TAP_EV( (void *)this, LSM6DSL_ACC_GYRO_SINGLE_DOUBLE_TAP_SINGLE_TAP ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable Z direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Z_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Z_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable Y direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_Y_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_Y_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Disable X direction in tap recognition. */
   if ( LSM6DSL_ACC_GYRO_W_TAP_X_EN( (void *)this, LSM6DSL_ACC_GYRO_TAP_X_EN_DISABLED ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1755,7 +1755,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Tap_Threshold(uint8_t thr)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1770,7 +1770,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Tap_Shock_Time(uint8_t time)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1785,7 +1785,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Tap_Quiet_Time(uint8_t time)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1800,7 +1800,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Set_Tap_Duration_Time(uint8_t time)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1827,7 +1827,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_6D_Orientation(LSM6DSL_Interrupt_Pin_
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Full scale selection. */
   if( Set_X_FS(2.0f) == LSM6DSL_STATUS_ERROR )
   {
@@ -1839,7 +1839,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Enable_6D_Orientation(LSM6DSL_Interrupt_Pin_
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Enable basic Interrupts */
   if ( LSM6DSL_ACC_GYRO_W_BASIC_INT( (void *)this, LSM6DSL_ACC_GYRO_BASIC_INT_ENABLED ) == MEMS_ERROR )
   {
@@ -1893,13 +1893,13 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_6D_Orientation(void)
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   /* Reset 6D threshold. */
   if ( LSM6DSL_ACC_GYRO_W_SIXD_THS( (void *)this, LSM6DSL_ACC_GYRO_SIXD_THS_80_degree ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1911,12 +1911,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Disable_6D_Orientation(void)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_XL(uint8_t *xl)
 {
   LSM6DSL_ACC_GYRO_DSD_XL_t xl_raw;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_DSD_XL( (void *)this, &xl_raw ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( xl_raw )
   {
     case LSM6DSL_ACC_GYRO_DSD_XL_DETECTED:
@@ -1928,7 +1928,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_XL(uint8_t *xl)
     default:
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1940,12 +1940,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_XL(uint8_t *xl)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_XH(uint8_t *xh)
 {
   LSM6DSL_ACC_GYRO_DSD_XH_t xh_raw;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_DSD_XH( (void *)this, &xh_raw ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( xh_raw )
   {
     case LSM6DSL_ACC_GYRO_DSD_XH_DETECTED:
@@ -1957,7 +1957,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_XH(uint8_t *xh)
     default:
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1969,12 +1969,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_XH(uint8_t *xh)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_YL(uint8_t *yl)
 {
   LSM6DSL_ACC_GYRO_DSD_YL_t yl_raw;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_DSD_YL( (void *)this, &yl_raw ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( yl_raw )
   {
     case LSM6DSL_ACC_GYRO_DSD_YL_DETECTED:
@@ -1986,7 +1986,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_YL(uint8_t *yl)
     default:
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -1998,12 +1998,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_YL(uint8_t *yl)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_YH(uint8_t *yh)
 {
   LSM6DSL_ACC_GYRO_DSD_YH_t yh_raw;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_DSD_YH( (void *)this, &yh_raw ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( yh_raw )
   {
     case LSM6DSL_ACC_GYRO_DSD_YH_DETECTED:
@@ -2015,7 +2015,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_YH(uint8_t *yh)
     default:
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -2027,12 +2027,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_YH(uint8_t *yh)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_ZL(uint8_t *zl)
 {
   LSM6DSL_ACC_GYRO_DSD_ZL_t zl_raw;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_DSD_ZL( (void *)this, &zl_raw ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( zl_raw )
   {
     case LSM6DSL_ACC_GYRO_DSD_ZL_DETECTED:
@@ -2044,7 +2044,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_ZL(uint8_t *zl)
     default:
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -2056,12 +2056,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_ZL(uint8_t *zl)
 LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_ZH(uint8_t *zh)
 {
   LSM6DSL_ACC_GYRO_DSD_ZH_t zh_raw;
-  
+
   if ( LSM6DSL_ACC_GYRO_R_DSD_ZH( (void *)this, &zh_raw ) == MEMS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   switch( zh_raw )
   {
     case LSM6DSL_ACC_GYRO_DSD_ZH_DETECTED:
@@ -2073,7 +2073,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_6D_Orientation_ZH(uint8_t *zh)
     default:
       return LSM6DSL_STATUS_ERROR;
   }
-  
+
   return LSM6DSL_STATUS_OK;
 }
 
@@ -2112,12 +2112,12 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   if(ReadReg(LSM6DSL_ACC_GYRO_MD2_CFG, &Md2_Cfg ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
   }
-  
+
   if(ReadReg(LSM6DSL_ACC_GYRO_INT1_CTRL, &Int1_Ctrl ) == LSM6DSL_STATUS_ERROR )
   {
     return LSM6DSL_STATUS_ERROR;
@@ -2127,7 +2127,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((Wake_Up_Src & LSM6DSL_ACC_GYRO_FF_EV_STATUS_MASK))
     {
-      status->FreeFallStatus = 1;  
+      status->FreeFallStatus = 1;
     }
   }
 
@@ -2135,7 +2135,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((Wake_Up_Src & LSM6DSL_ACC_GYRO_WU_EV_STATUS_MASK))
     {
-      status->WakeUpStatus = 1;  
+      status->WakeUpStatus = 1;
     }
   }
 
@@ -2143,7 +2143,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((Tap_Src & LSM6DSL_ACC_GYRO_SINGLE_TAP_EV_STATUS_MASK))
     {
-      status->TapStatus = 1;  
+      status->TapStatus = 1;
     }
   }
 
@@ -2151,7 +2151,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((Tap_Src & LSM6DSL_ACC_GYRO_DOUBLE_TAP_EV_STATUS_MASK))
     {
-      status->DoubleTapStatus = 1;  
+      status->DoubleTapStatus = 1;
     }
   }
 
@@ -2159,7 +2159,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((D6D_Src & LSM6DSL_ACC_GYRO_D6D_EV_STATUS_MASK))
     {
-      status->D6DOrientationStatus = 1;  
+      status->D6DOrientationStatus = 1;
     }
   }
 
@@ -2167,7 +2167,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((Func_Src & LSM6DSL_ACC_GYRO_PEDO_EV_STATUS_MASK))
     {
-      status->StepStatus = 1;  
+      status->StepStatus = 1;
     }
   }
 
@@ -2175,7 +2175,7 @@ LSM6DSLStatusTypeDef LSM6DSLSensor::Get_Event_Status( LSM6DSL_Event_Status_t *st
   {
     if((Func_Src & LSM6DSL_ACC_GYRO_TILT_EV_STATUS_MASK))
     {
-      status->TiltStatus = 1;  
+      status->TiltStatus = 1;
     }
   }
 
