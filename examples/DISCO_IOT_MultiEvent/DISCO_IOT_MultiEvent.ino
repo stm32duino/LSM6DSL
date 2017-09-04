@@ -76,7 +76,7 @@ void setup() {
   attachInterrupt(D49, INT1Event_cb, RISING);
 
   // Initlialize Components.
-  AccGyr = new LSM6DSLSensor(dev_i2c);
+  AccGyr = new LSM6DSLSensor(dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
   AccGyr->Enable_X();
 
   // Enable all HW events.

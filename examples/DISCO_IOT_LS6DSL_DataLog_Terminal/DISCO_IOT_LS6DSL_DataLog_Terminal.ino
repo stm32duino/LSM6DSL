@@ -63,7 +63,7 @@ void setup() {
   dev_i2c->begin();
 
   // Initlialize components.
-  AccGyr = new LSM6DSLSensor(dev_i2c);
+  AccGyr = new LSM6DSLSensor(dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
   AccGyr->Enable_X();
   AccGyr->Enable_G();
 }

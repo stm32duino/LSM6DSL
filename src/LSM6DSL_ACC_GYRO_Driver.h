@@ -69,7 +69,7 @@ typedef signed char i8_t;
 typedef union{
 	i16_t i16bit[3];
 	u8_t u8bit[6];
-} Type3Axis16bit_U;	
+} Type3Axis16bit_U;
 
 typedef union{
 	i16_t i16bit;
@@ -83,7 +83,7 @@ typedef union{
 
 typedef enum {
   MEMS_SUCCESS				=		0x01,
-  MEMS_ERROR				=		0x00	
+  MEMS_ERROR				=		0x00
 } status_t;
 
 #endif /*__SHARED__TYPES*/
@@ -95,7 +95,7 @@ typedef enum {
 /************** I2C Address *****************/
 
 #define LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW   0xD4  // SAD[0] = 0
-#define LSM6DSL_ACC_GYRO_I2C_ADDRESS_HIGH  0xD5  // SAD[0] = 1
+#define LSM6DSL_ACC_GYRO_I2C_ADDRESS_HIGH  0xD6  // SAD[0] = 1
 
 /************** Who am I  *******************/
 
@@ -194,7 +194,7 @@ typedef enum {
 #define LSM6DSL_ACC_GYRO_MD1_CFG  	0X5E
 #define LSM6DSL_ACC_GYRO_MD2_CFG  	0X5F
 
-#define LSM6DSL_ACC_GYRO_OUT_MAG_RAW_X_L  	0X66 
+#define LSM6DSL_ACC_GYRO_OUT_MAG_RAW_X_L  	0X66
 #define LSM6DSL_ACC_GYRO_OUT_MAG_RAW_X_H  	0X67
 #define LSM6DSL_ACC_GYRO_OUT_MAG_RAW_Y_L  	0X68
 #define LSM6DSL_ACC_GYRO_OUT_MAG_RAW_Y_H  	0X69
@@ -306,7 +306,7 @@ status_t LSM6DSL_ACC_GYRO_R_FS_XL(void *handle, LSM6DSL_ACC_GYRO_FS_XL_t *value)
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : GetAccData
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
 status_t LSM6DSL_ACC_GYRO_GetRawAccData(void *handle, u8_t *buff);
 status_t LSM6DSL_ACC_Get_Acceleration(void *handle, int *buff, u8_t from_fifo);
@@ -381,9 +381,9 @@ status_t LSM6DSL_ACC_GYRO_translate_ODR_G(LSM6DSL_ACC_GYRO_ODR_G_t value, u16_t 
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : GetGyroData
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
-status_t LSM6DSL_ACC_GYRO_GetRawGyroData(void *handle, u8_t *buff); 
+status_t LSM6DSL_ACC_GYRO_GetRawGyroData(void *handle, u8_t *buff);
 status_t LSM6DSL_ACC_Get_AngularRate(void *handle, int *buff, u8_t from_fifo);
 
 /*******************************************************************************
@@ -2700,7 +2700,7 @@ status_t LSM6DSL_ACC_GYRO_R_SleepEvOnInt2(void *handle, LSM6DSL_ACC_GYRO_INT2_SL
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : GetAccData
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
 status_t LSM6DSL_ACC_GYRO_GetRawAccData(void *handle, u8_t *buff);
 status_t LSM6DSL_ACC_Get_Acceleration(void *handle, int *buff, u8_t from_fifo);
@@ -2708,26 +2708,26 @@ status_t LSM6DSL_ACC_Get_Acceleration(void *handle, int *buff, u8_t from_fifo);
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : GetFIFOData
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
-status_t LSM6DSL_ACC_GYRO_Get_GetFIFOData(void *handle, u8_t *buff); 
+status_t LSM6DSL_ACC_GYRO_Get_GetFIFOData(void *handle, u8_t *buff);
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : GetTimestamp
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
-status_t LSM6DSL_ACC_GYRO_Get_GetTimestamp(void *handle, u8_t *buff); 
+status_t LSM6DSL_ACC_GYRO_Get_GetTimestamp(void *handle, u8_t *buff);
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : GetStepCounter
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
-status_t LSM6DSL_ACC_GYRO_Get_GetStepCounter(void *handle, u8_t *buff); 
+status_t LSM6DSL_ACC_GYRO_Get_GetStepCounter(void *handle, u8_t *buff);
 
 /*******************************************************************************
 * Register      : <REGISTER_L> - <REGISTER_H>
 * Output Type   : Pedometer Threshold
-* Permission    : RO 
+* Permission    : RO
 *******************************************************************************/
 status_t  LSM6DSL_ACC_GYRO_W_PedoThreshold(void *handle, u8_t newValue);
 
