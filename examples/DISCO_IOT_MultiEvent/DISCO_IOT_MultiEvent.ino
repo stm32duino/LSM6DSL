@@ -40,6 +40,12 @@
  ******************************************************************************
  */
 
+/** NOTE
+  The interrupt pin INT2 of the LSM6DSL is not connected on the Discovery L475VG
+  IoT board. So the wakeup event is not used in this sketch to not decrease
+  performances. If wakeup event is enabled on INT1 with all other events, this
+  could cause some troubles.
+*/
 
 // Includes.
 #include <LSM6DSLSensor.h>
