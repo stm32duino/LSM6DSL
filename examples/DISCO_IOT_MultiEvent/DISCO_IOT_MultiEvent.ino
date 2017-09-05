@@ -40,6 +40,12 @@
  ******************************************************************************
  */
 
+/** NOTE
+  The interrupt pin INT2 of the LSM6DSL is not connected on the Discovery L475VG
+  IoT board. So the wakeup event is not used in this sketch to not decrease
+  performances. If wakeup event is enabled on INT1 with all other events, this
+  causes some troubles.
+*/
 
 /* Includes ------------------------------------------------------------------*/
 #include <LSM6DSLSensor.h>
@@ -60,7 +66,6 @@ uint16_t step_count = 0;
 char report[256];
 
 void INT1Event_cb();
-void INT2Event_cb();
 void sendOrientation();
 TwoWire *dev_i2c;
 
@@ -86,7 +91,6 @@ void setup() {
   AccGyr->Enable_Single_Tap_Detection();
   AccGyr->Enable_Double_Tap_Detection();
   AccGyr->Enable_6D_Orientation();
-  AccGyr->Enable_Wake_Up_Detection();
 }
 
 
@@ -135,12 +139,6 @@ void loop() {
     {
       // Send 6D Orientation
 	    sendOrientation();
-    }
-
-    if (status.WakeUpStatus)
-    {
-      // Output data.
-      SerialPort.println("Wake up Detected!");
     }
   }
 }
