@@ -1,6 +1,6 @@
 /**
  ******************************************************************************
- * @file    X_NUCLEO_IKS01A2_LSM6DSL_DataLogTerminal.ino
+ * @file    X_NUCLEO_IKS01A2_LSM6DSL_DataLog_Terminal.ino
  * @author  AST
  * @version V1.0.0
  * @date    5 August 2016
