@@ -53,8 +53,6 @@
 // Components.
 LSM6DSLSensor *AccGyr;
 
-char report[256];
-
 void setup() {
   // Led.
   pinMode(13, OUTPUT);
