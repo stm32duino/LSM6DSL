@@ -3,13 +3,13 @@
  * @file    LSM6DSLSensor.cpp
  * @author  AST
  * @version V1.0.0
- * @date    5 August 2016
+ * @date    7 September 2017
  * @brief   Implementation of an LSM6DSL Inertial Measurement Unit (IMU) 6 axes
  *          sensor.
  ******************************************************************************
  * @attention
  *
- * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+ * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:

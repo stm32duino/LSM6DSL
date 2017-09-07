@@ -8,7 +8,7 @@ This sensor uses I2C to communicate. It is then required to create a TwoWire int
     dev_i2c = new TwoWire(I2C2_SDA, I2C2_SCL);  
     dev_i2c->begin();  
 
-An instance can be created and enbaled following the procedure below:  
+An instance can be created and enabled following the procedure below:  
 
     AccGyr = new LSM6DSLSensor(dev_i2c);  
     AccGyr->Enable_X();  

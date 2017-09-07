@@ -3,7 +3,7 @@
  * @file    DISCO_IOT__Pedometer.ino
  * @author  WI6LABS from AST
  * @version V1.0.0
- * @date    7 July 2017
+ * @date    7 September 2017
  * @brief   Arduino test application for the STMicrolectronics STM32 IOT Discovery Kit.
  *          MEMS Inertial and Environmental sensor expansion board.
  *          This application detects step event through the LSM6DSL sensor.
