@@ -44,8 +44,9 @@
 #include <LSM6DSLSensor.h>
 
 #define SerialPort Serial
-#define I2C2_SCL    D33
-#define I2C2_SDA    D34
+#define I2C2_SCL    PB10
+#define I2C2_SDA    PB11
+#define INT1        PD11
 
 // Components.
 LSM6DSLSensor *AccGyr;
@@ -73,7 +74,7 @@ void setup() {
   dev_i2c->begin();
 
   //Interrupts.
-  attachInterrupt(D49, INT1Event_cb, RISING);
+  attachInterrupt(INT1, INT1Event_cb, RISING);
 
   // Initlialize Components.
   AccGyr = new LSM6DSLSensor(dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
