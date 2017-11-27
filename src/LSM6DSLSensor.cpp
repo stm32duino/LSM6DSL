@@ -42,7 +42,6 @@
 #include "Arduino.h"
 #include "Wire.h"
 #include "LSM6DSLSensor.h"
-#include "LSM6DSL_ACC_GYRO_Driver.h"
 
 
 /* Class Implementation ------------------------------------------------------*/
@@ -111,7 +110,7 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c) : dev_i2c(i2c)
  * @param i2c object of an helper class which handles the I2C peripheral
  * @param address the address of the component's instance
  */
-LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : address(address), dev_i2c(i2c)
+LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c), address(address)
 {
   /* Enable register address automatically incremented during a multiple byte
      access with a serial interface. */
