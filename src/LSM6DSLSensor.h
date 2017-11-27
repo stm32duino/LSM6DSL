@@ -240,13 +240,13 @@ class LSM6DSLSensor
     LSM6DSLStatusTypeDef Set_G_ODR_When_Enabled(float odr);
     LSM6DSLStatusTypeDef Set_X_ODR_When_Disabled(float odr);
     LSM6DSLStatusTypeDef Set_G_ODR_When_Disabled(float odr);
-	
-	/* Configuration */
-    uint8_t address;
 
     /* Helper classes. */
     TwoWire *dev_i2c;
-	
+
+    /* Configuration */
+    uint8_t address;
+
     uint8_t X_isEnabled;
     float X_Last_ODR;
     uint8_t G_isEnabled;
