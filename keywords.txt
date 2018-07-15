@@ -6,7 +6,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-LSM6DSLSensor	KEYWORD1	LSM6DSLSensor
+LSM6DSLSensor	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
