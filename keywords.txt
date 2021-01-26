@@ -12,6 +12,8 @@ LSM6DSLSensor	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+begin	KEYWORD2
+end	KEYWORD2
 Enable_X	KEYWORD2
 Enable_G	KEYWORD2
 Disable_X	KEYWORD2

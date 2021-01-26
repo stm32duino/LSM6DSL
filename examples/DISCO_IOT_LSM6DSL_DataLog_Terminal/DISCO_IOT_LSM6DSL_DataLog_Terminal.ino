@@ -47,8 +47,8 @@
 #define I2C2_SDA    PB11
 
 // Components.
-LSM6DSLSensor *AccGyr;
-TwoWire *dev_i2c;
+TwoWire dev_i2c(I2C2_SDA, I2C2_SCL);
+LSM6DSLSensor AccGyr(&dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
 
 void setup() {
   // Led.
@@ -57,13 +57,12 @@ void setup() {
   SerialPort.begin(9600);
 
   // Initialize I2C bus.
-  dev_i2c = new TwoWire(I2C2_SDA, I2C2_SCL);
-  dev_i2c->begin();
+  dev_i2c.begin();
 
   // Initlialize components.
-  AccGyr = new LSM6DSLSensor(dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
-  AccGyr->Enable_X();
-  AccGyr->Enable_G();
+  AccGyr.begin();
+  AccGyr.Enable_X();
+  AccGyr.Enable_G();
 }
 
 void loop() {
@@ -76,8 +75,8 @@ void loop() {
   // Read accelerometer and gyroscope.
   int32_t accelerometer[3];
   int32_t gyroscope[3];
-  AccGyr->Get_X_Axes(accelerometer);
-  AccGyr->Get_G_Axes(gyroscope);
+  AccGyr.Get_X_Axes(accelerometer);
+  AccGyr.Get_G_Axes(gyroscope);
 
   // Output data.
   SerialPort.print("Acc[mg]: ");

@@ -49,8 +49,8 @@
 #define INT1        PD11
 
 // Components.
-LSM6DSLSensor *AccGyr;
-TwoWire *dev_i2c;
+TwoWire dev_i2c(I2C2_SDA, I2C2_SCL);
+LSM6DSLSensor AccGyr(&dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
 
 //Interrupts.
 volatile int mems_event = 0;
@@ -65,25 +65,24 @@ void setup() {
   SerialPort.begin(9600);
 
   // Initialize I2C bus.
-  dev_i2c = new TwoWire(I2C2_SDA, I2C2_SCL);
-  dev_i2c->begin();
+  dev_i2c.begin();
 
   //Interrupts.
   attachInterrupt(INT1, INT1Event_cb, RISING);
 
   // Initlialize Components.
-  AccGyr = new LSM6DSLSensor(dev_i2c, LSM6DSL_ACC_GYRO_I2C_ADDRESS_LOW);
-  AccGyr->Enable_X();
+  AccGyr.begin();
+  AccGyr.Enable_X();
 
   // Enable Double Tap Detection.
-  AccGyr->Enable_Double_Tap_Detection();
+  AccGyr.Enable_Double_Tap_Detection();
 }
 
 void loop() {
   if (mems_event) {
     mems_event = 0;
     LSM6DSL_Event_Status_t status;
-    AccGyr->Get_Event_Status(&status);
+    AccGyr.Get_Event_Status(&status);
     if (status.DoubleTapStatus)
     {
       // Led blinking.

@@ -45,114 +45,84 @@
 
 
 /* Class Implementation ------------------------------------------------------*/
-
-/** Constructor
- * @param i2c object of an helper class which handles the I2C peripheral
- * @param address the address of the component's instance
- */
-LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c) : dev_i2c(i2c)
-{
-  address = LSM6DSL_ACC_GYRO_I2C_ADDRESS_HIGH;
-
-  /* Enable register address automatically incremented during a multiple byte
-     access with a serial interface. */
-  if ( LSM6DSL_ACC_GYRO_W_IF_Addr_Incr( (void *)this, LSM6DSL_ACC_GYRO_IF_INC_ENABLED ) == MEMS_ERROR )
-  {
-    return;
-  }
-
-  /* Enable BDU */
-  if ( LSM6DSL_ACC_GYRO_W_BDU( (void *)this, LSM6DSL_ACC_GYRO_BDU_BLOCK_UPDATE ) == MEMS_ERROR )
-  {
-    return;
-  }
-
-  /* FIFO mode selection */
-  if ( LSM6DSL_ACC_GYRO_W_FIFO_MODE( (void *)this, LSM6DSL_ACC_GYRO_FIFO_MODE_BYPASS ) == MEMS_ERROR )
-  {
-    return;
-  }
-
-  /* Output data rate selection - power down. */
-  if ( LSM6DSL_ACC_GYRO_W_ODR_XL( (void *)this, LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN ) == MEMS_ERROR )
-  {
-    return;
-  }
-
-  /* Full scale selection. */
-  if ( Set_X_FS( 2.0f ) == LSM6DSL_STATUS_ERROR )
-  {
-    return;
-  }
-
-  /* Output data rate selection - power down */
-  if ( LSM6DSL_ACC_GYRO_W_ODR_G( (void *)this, LSM6DSL_ACC_GYRO_ODR_G_POWER_DOWN ) == MEMS_ERROR )
-  {
-    return;
-  }
-
-  /* Full scale selection. */
-  if ( Set_G_FS( 2000.0f ) == LSM6DSL_STATUS_ERROR )
-  {
-    return;
-  }
-
-  X_Last_ODR = 104.0f;
-
-  X_isEnabled = 0;
-
-  G_Last_ODR = 104.0f;
-
-  G_isEnabled = 0;
-};
-
 /** Constructor
  * @param i2c object of an helper class which handles the I2C peripheral
  * @param address the address of the component's instance
  */
 LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c), address(address)
 {
+  dev_spi = NULL;
+  X_isEnabled = 0;
+  G_isEnabled = 0;
+}
+
+/** Constructor
+ * @param spi object of an helper class which handles the SPI peripheral
+ * @param cs_pin the chip select pin
+ * @param spi_speed the SPI speed
+ */
+LSM6DSLSensor::LSM6DSLSensor(SPIClass *spi, int cs_pin, uint32_t spi_speed) : dev_spi(spi), cs_pin(cs_pin), spi_speed(spi_speed)
+{
+  dev_i2c = NULL;
+  address = 0;
+  X_isEnabled = 0U;
+  G_isEnabled = 0U;
+}
+
+/**
+ * @brief  Configure the sensor in order to be used
+ * @retval 0 in case of success, an error code otherwise
+ */
+LSM6DSLStatusTypeDef LSM6DSLSensor::begin()
+{
+  if(dev_spi)
+  {
+    // Configure CS pin
+    pinMode(cs_pin, OUTPUT);
+    digitalWrite(cs_pin, HIGH); 
+  }
+
   /* Enable register address automatically incremented during a multiple byte
      access with a serial interface. */
   if ( LSM6DSL_ACC_GYRO_W_IF_Addr_Incr( (void *)this, LSM6DSL_ACC_GYRO_IF_INC_ENABLED ) == MEMS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   /* Enable BDU */
   if ( LSM6DSL_ACC_GYRO_W_BDU( (void *)this, LSM6DSL_ACC_GYRO_BDU_BLOCK_UPDATE ) == MEMS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   /* FIFO mode selection */
   if ( LSM6DSL_ACC_GYRO_W_FIFO_MODE( (void *)this, LSM6DSL_ACC_GYRO_FIFO_MODE_BYPASS ) == MEMS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   /* Output data rate selection - power down. */
   if ( LSM6DSL_ACC_GYRO_W_ODR_XL( (void *)this, LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN ) == MEMS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   /* Full scale selection. */
   if ( Set_X_FS( 2.0f ) == LSM6DSL_STATUS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   /* Output data rate selection - power down */
   if ( LSM6DSL_ACC_GYRO_W_ODR_G( (void *)this, LSM6DSL_ACC_GYRO_ODR_G_POWER_DOWN ) == MEMS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   /* Full scale selection. */
   if ( Set_G_FS( 2000.0f ) == LSM6DSL_STATUS_ERROR )
   {
-    return;
+    return LSM6DSL_STATUS_ERROR;
   }
 
   X_Last_ODR = 104.0f;
@@ -162,7 +132,36 @@ LSM6DSLSensor::LSM6DSLSensor(TwoWire *i2c, uint8_t address) : dev_i2c(i2c), addr
   G_Last_ODR = 104.0f;
 
   G_isEnabled = 0;
-};
+
+  return LSM6DSL_STATUS_OK;
+}
+
+/**
+ * @brief  Disable the sensor and relative resources
+ * @retval 0 in case of success, an error code otherwise
+ */
+LSM6DSLStatusTypeDef LSM6DSLSensor::end()
+{
+  /* Disable both acc and gyro */
+  if (Disable_X() != LSM6DSL_STATUS_OK)
+  {
+    return LSM6DSL_STATUS_ERROR;
+  }
+
+  if (Disable_G() != LSM6DSL_STATUS_OK)
+  {
+    return LSM6DSL_STATUS_ERROR;
+  }
+
+  /* Reset CS configuration */
+  if(dev_spi)
+  {
+    // Configure CS pin
+    pinMode(cs_pin, INPUT); 
+  }
+
+  return LSM6DSL_STATUS_OK;
+}
 
 /**
  * @brief  Enable LSM6DSL Accelerator
